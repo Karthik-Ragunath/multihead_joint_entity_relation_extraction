@@ -37,13 +37,20 @@ if __name__ == "__main__":
     test_data = utils.HeadData(config.test_id_docs, np.arange(len(config.test_id_docs)))
 
 
-    tf.reset_default_graph()
-    tf.set_random_seed(1)
+    #tf.reset_default_graph()
+    tf.compat.v1.reset_default_graph()
+    #tf.set_random_seed(1)
+    #tf.random.set_seed()
+    tf.random.set_seed(1)
+
 
     utils.printParameters(config)
 
-    with tf.Session() as sess:
-        embedding_matrix = tf.get_variable('embedding_matrix', shape=config.wordvectors.shape, dtype=tf.float32,
+    with tf.compat.v1.Session() as sess:
+        #embedding_matrix = tf.get_variable('embedding_matrix', shape=config.wordvectors.shape, dtype=tf.float32,
+        #                                   trainable=False).assign(config.wordvectors)
+
+        embedding_matrix = tf.compat.v1.get_variable('embedding_matrix', shape=config.wordvectors.shape, dtype=tf.float32,
                                            trainable=False).assign(config.wordvectors)
         emb_mtx = sess.run(embedding_matrix)
 

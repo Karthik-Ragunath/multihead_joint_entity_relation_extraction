@@ -1,7 +1,8 @@
 import os
 import utils
 import parsers
-from sklearn.externals import joblib
+#from sklearn.externals import joblib
+import joblib
 import os.path
 
 """"Read the configuration file and set the parameters of the model"""

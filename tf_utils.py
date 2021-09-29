@@ -130,8 +130,8 @@ class model:
         return new_gvs
 
     def broadcasting(self, left, right):
-        import tensorflow as tf
-
+        import tensorflow.compat.v1 as tf
+        tf.disable_v2_behavior()
 
 
         left = tf.transpose(left, perm=[1, 0, 2])
@@ -146,8 +146,8 @@ class model:
         return B
 
     def getNerScores(self, lstm_out, n_types=1, dropout_keep_in_prob=1):
-        import tensorflow as tf
-
+        import tensorflow.compat.v1 as tf
+        tf.disable_v2_behavior()
 
         u_a = tf.get_variable("u_typ", [self.config.hidden_size_lstm * 2, self.config.hidden_size_n1])  # [128 32]
         v = tf.get_variable("v_typ", [self.config.hidden_size_n1, n_types])  # [32,1] or [32,10]
@@ -171,7 +171,8 @@ class model:
         return g
 
     def getHeadSelectionScores(self, lstm_out,dropout_keep_in_prob=1):
-        import tensorflow as tf
+        import tensorflow.compat.v1 as tf
+        tf.disable_v2_behavior()
 
         u_a = tf.get_variable("u_a", [(self.config.hidden_size_lstm * 2) + self.config.label_embeddings_size, self.config.hidden_size_n1])  # [128 32]
         w_a = tf.get_variable("w_a", [(self.config.hidden_size_lstm * 2) + self.config.label_embeddings_size, self.config.hidden_size_n1])  # [128 32]
@@ -219,8 +220,9 @@ class model:
     def computeLoss(self,input_rnn, dropout_embedding_keep,dropout_lstm_keep,dropout_lstm_output_keep,
                     seqlen,dropout_fcl_ner_keep,ners_ids, dropout_fcl_rel_keep,is_train,scoring_matrix_gold, reuse = False):
 
-        import tensorflow as tf
 
+        import tensorflow.compat.v1 as tf
+        tf.disable_v2_behavior()
         with tf.variable_scope("loss_computation", reuse=reuse):
 
             if self.config.use_dropout:
@@ -231,9 +233,9 @@ class model:
                     input_rnn = tf.nn.dropout(input_rnn, keep_prob=dropout_lstm_keep)
                     #input_rnn = tf.Print(input_rnn, [dropout_lstm_keep], 'lstm:  ', summarize=1000)
 
-                lstm_fw_cell = tf.contrib.rnn.BasicLSTMCell(self.config.hidden_size_lstm)
+                lstm_fw_cell = tf.nn.rnn_cell.LSTMCell(self.config.hidden_size_lstm)
                 # Backward direction cell
-                lstm_bw_cell = tf.contrib.rnn.BasicLSTMCell(self.config.hidden_size_lstm)
+                lstm_bw_cell = tf.nn.rnn_cell.LSTMCell(self.config.hidden_size_lstm)
 
                 lstm_out, _ = tf.nn.bidirectional_dynamic_rnn(
                     cell_fw=lstm_fw_cell,
@@ -271,8 +273,14 @@ class model:
 
             # nerScores = tf.Print(nerScores, [tf.shape(ners_ids), ners_ids, tf.shape(nerScores)], 'ners_ids:  ', summarize=1000)
 
-            log_likelihood, transition_params = tf.contrib.crf.crf_log_likelihood(
+            import tensorflow_addons as tfa
+            #log_likelihood, transition_params = tf.contrib.crf.crf_log_likelihood(
+            #    nerScores, ners_ids, seqlen)
+
+
+            log_likelihood, transition_params = tfa.layers.CRF(
                 nerScores, ners_ids, seqlen)
+
             if self.config.ner_loss == "crf":
 
                 lossNER = -log_likelihood
@@ -313,7 +321,8 @@ class model:
 
     def run(self):
 
-        import tensorflow as tf
+        import tensorflow.compat.v1 as tf
+        tf.disable_v2_behavior()
 
         # shape = (batch size, max length of sentence, max length of word)
         char_ids = tf.placeholder(tf.int32, shape=[None, None, None])
@@ -372,8 +381,12 @@ class model:
         char_hidden_size = self.config.hidden_size_char
 
         # 3. bi lstm on chars
-        cell_fw = tf.contrib.rnn.BasicLSTMCell(char_hidden_size, state_is_tuple=True)
-        cell_bw = tf.contrib.rnn.BasicLSTMCell(char_hidden_size, state_is_tuple=True)
+        #cell_fw = tf.contrib.rnn.BasicLSTMCell(char_hidden_size, state_is_tuple=True)
+        #cell_bw = tf.contrib.rnn.BasicLSTMCell(char_hidden_size, state_is_tuple=True)
+
+
+        cell_fw = tf.nn.rnn_cell.LSTMCell(char_hidden_size, state_is_tuple=True)
+        cell_bw = tf.nn.rnn_cell.LSTMCell(char_hidden_size, state_is_tuple=True)
 
         _, ((_, output_fw), (_, output_bw)) = tf.nn.bidirectional_dynamic_rnn(cell_fw=cell_fw, cell_bw=cell_bw,
                                                                               inputs=char_embeddings_reshaped,

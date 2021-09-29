@@ -64,9 +64,11 @@ class headIdParser:
 def readHeadFile(headFile):
     # head_id_col_vector = ['tId', 'emId', "token", "nerId", "nerBilou","nerBIO", "ner", 'relLabels', "headIds", 'rels', 'relIds','scoringMatrixHeads','tokenWeights']
     head_id_col_vector = ['token_id', 'token', "BIO", "relation", 'head']
-    headfile = pd.read_csv(headFile, names=head_id_col_vector, encoding="utf-8",
-                           engine='python', sep="\t", quoting=csv.QUOTE_NONE).as_matrix()
+    #headfile = pd.read_csv(headFile, names=head_id_col_vector, encoding="utf-8",
+    #                       engine='python', sep="\t", quoting=csv.QUOTE_NONE).as_matrix()
 
+    headfile = pd.read_csv(headFile, names=head_id_col_vector, encoding="utf-8",
+                           engine='python', sep="\t", quoting=csv.QUOTE_NONE).values
     return headIdParser(headfile).head_docs
 
 def preprocess(docs,wordindices,dataset_set_characters,dataset_set_bio_tags,dataset_set_ec_tags,dataset_set_relations):

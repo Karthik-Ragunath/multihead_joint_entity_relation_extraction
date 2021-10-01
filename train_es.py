@@ -6,6 +6,8 @@ import tensorflow as tf
 import sys
 import os.path
 
+import h5py
+
 'Train the model on the train set and evaluate on the evaluation and test sets until ' \
 '(1) maximum epochs limit or (2) early stopping break'
 def checkInputs():
@@ -52,7 +54,7 @@ if __name__ == "__main__":
         for iter in range(config.nepochs+1):
             print("Iter:", iter)
             model.train(train_data,operations,iter)
-
+            model.save(epoch=iter, model_name="train_es")
             dev_score=model.evaluate(dev_data,operations,'dev')
 
             model.evaluate(test_data, operations,'test')

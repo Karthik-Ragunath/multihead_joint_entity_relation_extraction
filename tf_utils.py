@@ -1,6 +1,7 @@
 import utils
 import time
 import eval
+import tensorflow as tf
 
 class model:
     """Set of classes and methods for training the model and computing the ner and head selection loss"""
@@ -24,6 +25,9 @@ class model:
             raise ValueError(
                 'Valid evaluation methods : "strict" and "boundaries" in "BIO" mode and "relaxed" in "EC" mode .')
 
+    def save(self, epoch=None, model_name=None): # attempt to save the model
+        saver = tf.train.Saver()
+        saver.save(self.sess, './output/{model_name}_{epoch}'.format(model_name=model_name, epoch=epoch))
 
     def train(self,train_data,operations,iter):
 

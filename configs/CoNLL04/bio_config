@@ -7,7 +7,8 @@ filename_test           = "data/CoNLL04/test.txt"
 filename_train          = "data/CoNLL04/train.txt"
 
 # training
-nepochs                 = 150
+#nepochs                 = 150
+nepochs                 = 1
 optimizer               = Adam
 activation              = tanh
 learning_rate           = 1e-3

@@ -6,6 +6,8 @@ import tensorflow as tf
 import sys
 import os.path
 
+import h5py
+
 'Train the model on the complete train+eval set until the limit specified by ' \
 '(1) maximum epochs or (2) early stopping after executing train_es.py, is exceeded'
 
@@ -66,6 +68,8 @@ if __name__ == "__main__":
             model.train(train_data,operations,iter)
 
             test_score=model.evaluate(test_data,operations,'test')
+
+            model.save(epoch=iter, model_name='train_eval')
 
             print ("\n- Test score {} in {} epoch\n".format(test_score,iter))
 

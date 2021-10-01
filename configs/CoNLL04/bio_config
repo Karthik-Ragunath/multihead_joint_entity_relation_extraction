@@ -19,6 +19,8 @@ ner_loss                = crf # or softmax
 use_chars               = True 
 use_adversarial         = False
 ner_classes             = BIO #or EC for entity classification
+restore_prev_sess_es    = True
+restore_prev_sess_eval  = True
 
 #hyperparameters
 dropout_embedding       = 0.9

@@ -38,7 +38,6 @@ if __name__ == "__main__":
     train_data = utils.HeadData(config.train_id_docs, np.arange(len(config.train_id_docs)))
     test_data = utils.HeadData(config.test_id_docs, np.arange(len(config.test_id_docs)))
 
-
     tf.reset_default_graph()
     tf.set_random_seed(1)
 
@@ -50,6 +49,10 @@ if __name__ == "__main__":
         emb_mtx = sess.run(embedding_matrix)
 
         model = tf_utils.model(config,emb_mtx,sess)
+
+
+        if config.restore_prev_sess_es == "True":
+            restore(out_directory="output_eval", model_name="joint_ent_rel_model")
 
         obj, m_op, predicted_op_ner, actual_op_ner, predicted_op_rel, actual_op_rel, score_op_rel = model.run()
 
@@ -69,7 +72,7 @@ if __name__ == "__main__":
 
             test_score=model.evaluate(test_data,operations,'test')
 
-            model.save(epoch=iter, model_name='train_eval')
+            model.save(out_directory="output_eval", model_name='joint_ent_rel_model')
 
             print ("\n- Test score {} in {} epoch\n".format(test_score,iter))
 

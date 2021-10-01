@@ -25,9 +25,13 @@ class model:
             raise ValueError(
                 'Valid evaluation methods : "strict" and "boundaries" in "BIO" mode and "relaxed" in "EC" mode .')
 
-    def save(self, epoch=None, model_name=None): # attempt to save the model
+    def save(self, out_directory=None, model_name=None): # attempt to save the model
         saver = tf.train.Saver()
-        saver.save(self.sess, './output/{model_name}_{epoch}'.format(model_name=model_name, epoch=epoch))
+        saver.save(self.sess, './{out_directory}/{model_name}'.format(model_name=model_name, out_directory=out_directory))
+
+    def restore(self, out_directory=None, model_name=None): # attempt to restore saved sess
+        saved_session = tf.train.import_meta_graph(model_name)
+        saved_session.restore(self.sess, tf.train.latest_checkpoint('./{out_directory}'.format(out_directory=out_directory)))
 
     def train(self,train_data,operations,iter):
 

@@ -39,6 +39,10 @@ if __name__ == "__main__":
 
         model = tf_utils.model(config,emb_mtx,sess)
 
+	
+        if config.restore_prev_sess_es == "True":
+            restore(out_directory="output_es", model_name="joint_ent_rel_model")
+
         obj, m_op, predicted_op_ner, actual_op_ner, predicted_op_rel, actual_op_rel, score_op_rel = model.run()
 
         train_step = model.get_train_op(obj)
@@ -54,7 +58,7 @@ if __name__ == "__main__":
         for iter in range(config.nepochs+1):
             print("Iter:", iter)
             model.train(train_data,operations,iter)
-            model.save(epoch=iter, model_name="train_es")
+            model.save(out_directory="output_es", model_name="joint_ent_rel_model")
             dev_score=model.evaluate(dev_data,operations,'dev')
 
             model.evaluate(test_data, operations,'test')

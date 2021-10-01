@@ -51,7 +51,7 @@ if __name__ == "__main__":
         model = tf_utils.model(config,emb_mtx,sess)
 
 
-        if config.restore_prev_sess_es == "True":
+        if config.restore_prev_sess_eval == "True":
             restore(out_directory="output_eval", model_name="joint_ent_rel_model")
 
         obj, m_op, predicted_op_ner, actual_op_ner, predicted_op_rel, actual_op_rel, score_op_rel = model.run()

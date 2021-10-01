@@ -68,7 +68,8 @@ class build_data():
         self.ner_classes = config_file.getProperty("ner_classes")
         self.use_chars = utils.strToBool(config_file.getProperty("use_chars"))
         self.use_adversarial = utils.strToBool(config_file.getProperty("use_adversarial"))
-
+        self.restore_prev_sess_es = utils.strToBool(config_file.getProperty("restore_prev_sess_es"))
+        self.restore_prev_sess_eval = utils.strToBool(config_file.getProperty("restore_prev_sess_eval"))
 
         # hyperparameters
         self.dropout_embedding = float(config_file.getProperty("dropout_embedding"))

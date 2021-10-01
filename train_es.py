@@ -13,9 +13,9 @@ def checkInputs():
         raise ValueError(
             'The configuration file and the timestamp should be specified.')
 
-
+print("0")
 if __name__ == "__main__":
-
+    print("1")
     checkInputs()
 
     config=build_data(sys.argv[1])
@@ -48,9 +48,9 @@ if __name__ == "__main__":
 
         best_score=0
         nepoch_no_imprv = 0  # for early stopping
-
+        print("Execution started")
         for iter in range(config.nepochs+1):
-
+            print("Iter:", iter)
             model.train(train_data,operations,iter)
 
             dev_score=model.evaluate(dev_data,operations,'dev')

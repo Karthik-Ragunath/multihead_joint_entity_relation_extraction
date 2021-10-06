@@ -70,7 +70,7 @@ class build_data():
         self.use_adversarial = utils.strToBool(config_file.getProperty("use_adversarial"))
         self.restore_prev_sess_es = utils.strToBool(config_file.getProperty("restore_prev_sess_es"))
         self.restore_prev_sess_eval = utils.strToBool(config_file.getProperty("restore_prev_sess_eval"))
-	self.raw_test_mode = utils.strToBool(config_file.getProperty('raw_test_mode'))
+        self.raw_test_mode = utils.strToBool(config_file.getProperty('raw_test_mode'))
 
         # hyperparameters
         self.dropout_embedding = float(config_file.getProperty("dropout_embedding"))

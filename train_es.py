@@ -40,8 +40,9 @@ if __name__ == "__main__":
         model = tf_utils.model(config,emb_mtx,sess)
 
 	
-        if config.restore_prev_sess_es == "True":
-            restore(out_directory="output_es", model_name="joint_ent_rel_model")
+        if config.restore_prev_sess_es == True:
+            print("\n - Model restored from previous checkpoint -\n")
+            model.restore(out_directory="output_es", model_name="joint_ent_rel_model.ckpt")
 
         obj, m_op, predicted_op_ner, actual_op_ner, predicted_op_rel, actual_op_rel, score_op_rel = model.run()
 
@@ -55,33 +56,37 @@ if __name__ == "__main__":
         best_score=0
         nepoch_no_imprv = 0  # for early stopping
         print("Execution started")
-        for iter in range(config.nepochs+1):
-            print("Iter:", iter)
-            model.train(train_data,operations,iter)
-            model.save(out_directory="output_es", model_name="joint_ent_rel_model")
-            dev_score=model.evaluate(dev_data,operations,'dev')
+        print("Test Mode:", config.raw_test_mode, "Type:", type(config.raw_test_mode))
+        if config.raw_test_mode != True:
+            for iter in range(config.nepochs+1):
+                print("Iter:", iter)
+                model.train(train_data,operations,iter)
+                model.save(out_directory="output_es", model_name="joint_ent_rel_model.ckpt")
+                dev_score=model.evaluate(dev_data,operations,'dev')
 
-            model.evaluate(test_data, operations,'test')
+                model.evaluate(test_data, operations,'test')
 
-            if dev_score>=best_score:
-                nepoch_no_imprv = 0
-                best_score = dev_score
+                if dev_score>=best_score:
+                    nepoch_no_imprv = 0
+                    best_score = dev_score
 
-                print ("- Best dev score {} so far in {} epoch".format(dev_score,iter))
+                    print ("- Best dev score {} so far in {} epoch".format(dev_score,iter))
 
-            else:
-                nepoch_no_imprv += 1
-                if nepoch_no_imprv >= config.nepoch_no_imprv:
+                else:
+                    nepoch_no_imprv += 1
+                    if nepoch_no_imprv >= config.nepoch_no_imprv:
 
-                    print ("- early stopping {} epochs without " \
-                                     "improvement".format(nepoch_no_imprv))
+                        print ("- early stopping {} epochs without " \
+                                         "improvement".format(nepoch_no_imprv))
 
-                    with open(sys.argv[3]+"/es_"+sys.argv[2]+".txt", "w+") as myfile:
-                        myfile.write(str(iter))
-                        myfile.close()
+                        with open(sys.argv[3]+"/es_"+sys.argv[2]+".txt", "w+") as myfile:
+                            myfile.write(str(iter))
+                            myfile.close()
 
-                    break
-
+                        break
+        else:
+            dev_score = model.evaluate(dev_data, operations, 'dev')
+            print("- dev score - {}".format(dev_score))
 
 
 

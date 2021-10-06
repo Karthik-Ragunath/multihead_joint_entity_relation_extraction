@@ -51,8 +51,9 @@ if __name__ == "__main__":
         model = tf_utils.model(config,emb_mtx,sess)
 
 
-        if config.restore_prev_sess_eval == "True":
-            restore(out_directory="output_eval", model_name="joint_ent_rel_model")
+        if config.restore_prev_sess_eval == True:
+            print("\n - Model restored from previous checkpoint - \n")
+            model.restore(out_directory="output_eval", model_name="joint_ent_rel_model.ckpt")
 
         obj, m_op, predicted_op_ner, actual_op_ner, predicted_op_rel, actual_op_rel, score_op_rel = model.run()
 
@@ -66,16 +67,21 @@ if __name__ == "__main__":
         best_score=0
         nepoch_no_imprv = 0  # for early stopping
 
-        for iter in range(config.nepochs+1):
 
-            model.train(train_data,operations,iter)
+        if config.raw_test_mode != True:
+            for iter in range(config.nepochs+1):
 
-            test_score=model.evaluate(test_data,operations,'test')
+                model.train(train_data,operations,iter)
 
-            model.save(out_directory="output_eval", model_name='joint_ent_rel_model')
+                test_score=model.evaluate(test_data,operations,'test')
 
-            print ("\n- Test score {} in {} epoch\n".format(test_score,iter))
+                model.save(out_directory="output_eval", model_name='joint_ent_rel_model.ckpt')
 
-            if es_epoch==iter:
-                    print("- early stopping after {} epochs".format(iter))
-                    break
+                print ("\n- Test score {} in {} epoch\n".format(test_score,iter))
+
+                if es_epoch==iter:
+                        print("- early stopping after {} epochs".format(iter))
+                        break
+        else:
+            test_score = model.evaluate(test_data,operations,'test')
+            print("\n- Test score - {}\n".format(test_score))

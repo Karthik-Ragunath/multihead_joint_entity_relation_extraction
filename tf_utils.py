@@ -30,8 +30,12 @@ class model:
         saver.save(self.sess, './{out_directory}/{model_name}'.format(model_name=model_name, out_directory=out_directory))
 
     def restore(self, out_directory=None, model_name=None): # attempt to restore saved sess
-        saved_session = tf.train.import_meta_graph(model_name)
-        saved_session.restore(self.sess, tf.train.latest_checkpoint('./{out_directory}'.format(out_directory=out_directory)))
+        # saved_session = tf.train.import_meta_graph(model_name)
+        # saved_session.restore(self.sess, tf.train.latest_checkpoint('./{out_directory}'.format(out_directory=out_directory)))
+        save_loc = './{out_directory}/'.format(out_directory=out_directory)
+        print('Save Location:', save_loc)
+        saved_session = tf.train.import_meta_graph('./{out_directory}/{model_name}.meta'.format(out_directory=out_directory, model_name=model_name))
+        saved_session.restore(self.sess, tf.train.latest_checkpoint(save_loc))
 
     def train(self,train_data,operations,iter):
 
@@ -92,6 +96,14 @@ class model:
             return  evaluator.getChunkedOverallAvgF1()
 
 
+    def raw_test(self,eval_data,operations,set):
+
+        print('-------Test on '+set+'-------')
+
+        evaluator = self.getEvaluator()
+        for x_dev in utils.generator(eval_data, operations.m_op, self.config, train=False):
+            predicted_ner, actual_ner, predicted_rel, actual_rel, _, m_eval = self.sess.run(
+                [operations.predicted_op_ner, operations.actual_op_ner, operations.predicted_op_rel, operations.actual_op_rel, operations.score_op_rel, operations.m_op], feed_dict=x_dev)
 
     def get_train_op(self,obj):
         import tensorflow as tf

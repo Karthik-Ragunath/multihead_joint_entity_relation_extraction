@@ -66,9 +66,12 @@ if __name__ == "__main__":
 
         best_score=0
         nepoch_no_imprv = 0  # for early stopping
+        
+        if config.absolute_test_mode == True:
+            results = model.raw_test(test_data, operations, 'test')
+            print("\n - Predictions - {results} \n".format(results=results))
 
-
-        if config.raw_test_mode != True:
+        elif config.raw_test_mode != True:
             for iter in range(config.nepochs+1):
 
                 model.train(train_data,operations,iter)

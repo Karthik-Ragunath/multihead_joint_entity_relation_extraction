@@ -12,7 +12,9 @@ unzip data/CoNLL04/vecs.lc.over100freq.zip -d data/CoNLL04/
 mkdir -p $output_dir
 
 #train on the training set and evaluate on the dev set to obtain early stopping epoch
-python3 -u train_es.py ${config_file} ${timestamp} ${output_dir} 2>&1 | tee ${output_dir}log.dev_${timestamp}.txt
+
+#python3 -u train_es.py ${config_file} ${timestamp} ${output_dir} 2>&1 | tee ${output_dir}log.dev_${timestamp}.txt
+
 #python3 -u train_es.py ${config_file} ${timestamp} ${output_dir}
 #echo train_es executed
 

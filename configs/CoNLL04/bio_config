@@ -3,7 +3,8 @@ filename_embeddings     =data/CoNLL04/vecs.lc.over100freq.txt
 
 # dataset
 filename_dev            = "data/CoNLL04/dev.txt"
-filename_test           = "data/CoNLL04/test.txt"
+#filename_test           = "data/CoNLL04/test.txt"
+filename_test           = "data/CoNLL04/test_backtranslations.txt"
 filename_train          = "data/CoNLL04/train.txt"
 
 # training
@@ -22,6 +23,7 @@ ner_classes             = BIO #or EC for entity classification
 restore_prev_sess_es    = True
 restore_prev_sess_eval  = True
 raw_test_mode           = True
+absolute_test_mode      = True
 
 #hyperparameters
 dropout_embedding       = 0.9

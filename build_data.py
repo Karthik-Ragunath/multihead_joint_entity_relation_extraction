@@ -72,6 +72,8 @@ class build_data():
         self.restore_prev_sess_eval = utils.strToBool(config_file.getProperty("restore_prev_sess_eval"))
         self.raw_test_mode = utils.strToBool(config_file.getProperty('raw_test_mode'))
 
+        self.absolute_test_mode = utils.strToBool(config_file.getProperty('absolute_test_mode'))
+
         # hyperparameters
         self.dropout_embedding = float(config_file.getProperty("dropout_embedding"))
         self.dropout_lstm = float(config_file.getProperty("dropout_lstm"))

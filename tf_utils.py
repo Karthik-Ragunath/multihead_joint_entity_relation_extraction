@@ -101,9 +101,12 @@ class model:
         print('-------Test on '+set+'-------')
 
         evaluator = self.getEvaluator()
+        output_list = []
         for x_dev in utils.generator(eval_data, operations.m_op, self.config, train=False):
             predicted_ner, actual_ner, predicted_rel, actual_rel, _, m_eval = self.sess.run(
                 [operations.predicted_op_ner, operations.actual_op_ner, operations.predicted_op_rel, operations.actual_op_rel, operations.score_op_rel, operations.m_op], feed_dict=x_dev)
+            output_list.append([predicted_ner, predicted_rel])
+        return output_list
 
     def get_train_op(self,obj):
         import tensorflow as tf
